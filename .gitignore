@@ -1,0 +1,18 @@
+node_modules/
+dist/
+release/
+test-out/
+*.log
+.DS_Store
+Thumbs.db
+
+# 运行时数据与凭据（含 safeStorage 加密密钥、译文、缓存）
+config/
+cache/
+PPtor-data/
+
+# 自检与开发产物
+.tmp/
+chat-smoke-results/
+smoke-results/
+prompt_out.txt

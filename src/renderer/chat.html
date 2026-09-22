@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>PPtor 论文问答</title>
+<link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+<div id="chatApp">
+
+  <!-- 左侧：会话列表（微信好友式，可分组） -->
+  <aside id="sidebar">
+    <div id="sideHead" class="drag-region">
+      <span class="side-title">会话</span>
+      <button id="btnAddDoc" class="side-add-btn no-drag" type="button" title="添加译文文档，创建新会话">＋ 添加文档</button>
+    </div>
+    <div id="sessionList"></div>
+    <div id="sideEmpty" class="side-empty is-hidden">暂无会话</div>
+  </aside>
+
+  <!-- 会话列表 | 聊天区 拖拽分隔条 -->
+  <div id="splitter" title="拖动调整会话列表宽度"></div>
+
+  <!-- 右侧：聊天区 -->
+  <main id="chatMain">
+    <header id="chatHead" class="drag-region">
+      <span id="headPet" class="head-pet no-drag" title="PPtor">🪄</span>
+      <span id="chatTitle">论文问答</span>
+      <span id="jobChip" class="job-chip is-hidden" title=""></span>
+      <span class="head-actions no-drag">
+        <button id="btnMinimize" class="win-btn" type="button" title="最小化">─</button>
+        <button id="btnClose" class="win-btn close" type="button" title="收起">✕</button>
+      </span>
+    </header>
+
+    <div id="messages"></div>
+
+    <footer id="composer">
+      <div class="composer-row">
+        <textarea id="input" rows="3" placeholder="输入问题，Enter 发送，Shift+Enter 换行"></textarea>
+        <button id="btnSend" class="send-btn" type="button">发送</button>
+      </div>
+    </footer>
+  </main>
+
+</div>
+
+<!-- 会话右键菜单 -->
+<div id="ctxMenu" class="ctx-menu is-hidden">
+  <button id="ctxRename" class="ctx-item" type="button">重命名</button>
+  <button id="ctxGroup" class="ctx-item" type="button">设置分组…</button>
+  <button id="ctxUngroup" class="ctx-item" type="button">移出分组</button>
+  <div class="ctx-sep"></div>
+  <button id="ctxRemove" class="ctx-item danger" type="button">删除会话</button>
+</div>
+
+<!-- 拖放高亮 -->
+<div id="dropVeil" class="drop-veil is-hidden"><div class="drop-veil-text">松手，我吃掉它</div></div>
+
+<script src="chat.js"></script>
+</body>
+</html>

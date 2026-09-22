@@ -1,0 +1,10 @@
+{
+  "id": "paper-pet",
+  "displayName": "PPtor",
+  "description": "A gentle violet slime that eats PDFs and translates them into your language.",
+  "spritesheetPath": "spritesheet.png",
+  "previewPath": "index.png",
+  "version": "1.0.0",
+  "license": "MIT",
+  "accent": "#5b4dff"
+}

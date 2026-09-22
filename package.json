@@ -1,0 +1,67 @@
+{
+  "name": "paper-translator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PPtor — 极简论文翻译桌宠",
+  "main": "src/main/main.js",
+  "author": "Fangster-1",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "smoke": "electron . --smoke",
+    "selftest": "node scripts/selftest.js",
+    "pet": "node scripts/make-default-pet.js",
+    "pet:check": "node scripts/pet-ui-regression.js",
+    "fix:sign": "node scripts/fix-wincodesign.js",
+    "pack": "electron-builder --win --dir",
+    "dist": "electron-builder --win portable",
+    "verify": "node scripts/verify.js",
+    "export:check": "node scripts/export-regression.js",
+    "runtime:check": "node scripts/runtime-regression.js",
+    "chat:check": "electron . --chat-smoke"
+  },
+  "build": {
+    "appId": "com.pptor.translator",
+    "productName": "PPtor",
+    "asar": true,
+    "compression": "normal",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "pets/**/*",
+      "package.json",
+      "!**/*.map",
+      "!pets/**/qa/**",
+      "!pets/**/index.png",
+      "!src/main/chat-smoke.js"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "PPtor-${version}-portable.exe"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "docx": "9.7.1",
+    "image-size": "2.0.2",
+    "katex": "0.16.22"
+  }
+}

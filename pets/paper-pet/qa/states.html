@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>PPtor Pet States QA</title>
+<style>
+body{margin:0;padding:24px;background:#f4f1ff;color:#242037;font:14px/1.5 "Segoe UI","Microsoft YaHei",sans-serif}
+h1{margin:0 0 4px}p{margin:0 0 18px;color:#6b6678}.grid{display:grid;grid-template-columns:repeat(3,192px);gap:16px}
+.card{background:#fff;border:1px solid #e2ddf5;border-radius:16px;padding:10px;box-shadow:0 4px 14px #443b7020}
+.cell{width:192px;height:208px;background-image:url('../spritesheet.png');background-size:1536px 1872px;background-repeat:no-repeat}
+.label b,.label span,.label small{display:block}.label b{font-size:15px}.label span{color:#6b6678}.label small{color:#9690a5;font-size:11px;margin-top:3px}
+</style></head><body><h1>PPtor 桌宠状态预览</h1><p>每格使用实际 192×208 精灵单元完整展示；运行时 CSS 动画与进度气泡另行验证。</p><div class="grid"><article class="card"><div class="cell" style="background-position:0 -0px"></div><div class="label"><b>待机</b><span>Idle</span><small>idle · 6 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -208px"></div><div class="label"><b>导出文档</b><span>Export</span><small>running-right · 8 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -416px"></div><div class="label"><b>拖动</b><span>Dragging</span><small>running-left · 8 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -624px"></div><div class="label"><b>抚摸 / 欢迎</b><span>Petting / Welcome</span><small>waving · 4 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -832px"></div><div class="label"><b>完成</b><span>Complete</span><small>jumping · 5 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -1040px"></div><div class="label"><b>失败</b><span>Failed</span><small>failed · 8 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -1248px"></div><div class="label"><b>等待确认</b><span>Waiting</span><small>waiting · 6 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -1456px"></div><div class="label"><b>翻译打字</b><span>Translating</span><small>running · 6 frames</small></div></article>
+<article class="card"><div class="cell" style="background-position:0 -1664px"></div><div class="label"><b>解析阅读</b><span>Parsing</span><small>review · 6 frames</small></div></article></div></body></html>

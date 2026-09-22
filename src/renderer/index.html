@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>PPtor</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 宠物本体：极简小幽灵；进度由底部进度条卡片与状态动画呈现 -->
+<div id="pet" class="pet interactive" title="拖入 PDF 即可翻译 · 右键打开菜单 · Ctrl+滚轮缩放">
+  <div id="sprite" class="sprite">
+    <svg id="petSvg" viewBox="0 0 200 208" aria-hidden="true">
+      <!-- 幽灵本体：圆弧顶 + 波浪底 -->
+      <g id="ghost">
+        <path id="ghostBody" d="M100,36 C73,36 52,57 52,86 L52,156 Q64,176 76,156 Q88,176 100,156 Q112,176 124,156 Q136,176 148,156 L148,86 C148,57 127,36 100,36 Z"/>
+        <g id="face">
+          <!-- 常态：圆点眼 + 微笑 -->
+          <g class="eyes">
+            <ellipse class="eye" cx="79" cy="96" rx="6" ry="8"/>
+            <ellipse class="eye" cx="121" cy="96" rx="6" ry="8"/>
+          </g>
+          <!-- 开心：弯月眼 -->
+          <g class="eyes-happy">
+            <path d="M71,99 Q79,90 87,99"/>
+            <path d="M113,99 Q121,90 129,99"/>
+          </g>
+          <!-- 失败：叉叉眼 -->
+          <g class="eyes-x">
+            <path d="M73,91 L85,103 M85,91 L73,103"/>
+            <path d="M115,91 L127,103 M127,91 L115,103"/>
+          </g>
+          <path class="mouth" d="M87,117 Q100,128 113,117"/>
+          <circle class="mouth-open" cx="100" cy="122" r="6.5"/>
+          <path class="mouth-sad" d="M87,125 Q100,115 113,125"/>
+          <path class="mouth-flat" d="M89,121 L111,121"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<!-- 气泡：对话与配置向导都在这里 -->
+<div id="bubble" class="bubble interactive is-hidden">
+  <div id="bubbleTitle" class="bubble-title"></div>
+  <div id="bubbleBody" class="bubble-body"></div>
+  <div id="bubbleActions" class="bubble-actions"></div>
+</div>
+
+<!-- 进度 -->
+<div id="progress" class="progress interactive is-hidden">
+  <div class="progress-head">
+    <span id="progressState" class="progress-state">准备中</span>
+    <button id="cancelJob" class="progress-cancel" type="button">取消</button>
+  </div>
+  <div class="progress-line"><span id="phaseLabel">当前阶段 · 准备中</span><span id="phasePercent">等待中…</span></div>
+  <div id="phaseBar" class="bar phase-bar is-indeterminate"><div id="phaseBarFill" class="bar-fill"></div></div>
+  <div class="progress-line overall-line"><span>整篇任务</span><span id="overallPercent">0%</span></div>
+  <div class="bar overall-bar"><div id="barFill" class="bar-fill"></div></div>
+  <div id="progressText" class="progress-text"></div>
+</div>
+
+<!-- 拖放高亮 -->
+<div id="dropVeil" class="drop-veil is-hidden">
+  <div id="dropVeilText" class="drop-veil-text">松手，我吃掉它</div>
+</div>
+
+<!-- 菜单栏：常驻交互控制面板，点击选项不退出 -->
+<div id="menuPanel" class="menu-panel interactive is-hidden">
+  <div class="menu-header">
+    <span class="menu-title">PPtor</span>
+    <button id="menuCloseBtn" class="menu-close-btn" type="button" title="收起菜单">✕</button>
+  </div>
+
+  <div class="menu-section menu-quick">
+    <button id="menuPickTranslate" class="menu-btn primary" type="button">翻译论文…</button>
+    <button id="menuQaOpen" class="menu-btn secondary" type="button">论文问答…</button>
+  </div>
+  <div class="menu-divider"></div>
+
+  <div class="menu-section">
+    <div class="menu-item-row">
+      <span class="menu-item-label">模型：</span>
+      <span id="menuModelName" class="menu-item-value" title="当前模型">未配置</span>
+      <span id="menuModelDot" class="status-dot-mini unconfigured"></span>
+      <span id="menuModelText" class="status-text">未配置</span>
+      <button id="menuModelRefresh" class="menu-refresh-btn" type="button" title="测试连接">🗘</button>
+      <button id="menuConfigModel" class="menu-link-btn" type="button">设置</button>
+    </div>
+    <div class="menu-item-row">
+      <span class="menu-item-label">解析：</span>
+      <span id="menuParserName" class="menu-item-value" title="当前解析模式">云端 API</span>
+      <span id="menuParserDot" class="status-dot-mini unconfigured"></span>
+      <span id="menuParserText" class="status-text">未配置</span>
+      <button id="menuParserRefresh" class="menu-refresh-btn" type="button" title="测试连接">🗘</button>
+      <button id="menuConfigParser" class="menu-link-btn" type="button">设置</button>
+    </div>
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-section">
+    <div class="menu-sub-row inline">
+      <span class="menu-sub-title">输出排版：</span>
+      <div class="menu-radio-group">
+        <label class="menu-radio-label">
+          <input type="radio" name="menuLayout" value="faithful">
+          <span>按原格式</span>
+        </label>
+        <label class="menu-radio-label">
+          <input type="radio" name="menuLayout" value="generic">
+          <span>通用模板</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="menu-sub-row inline">
+      <span class="menu-sub-title">输出内容：</span>
+      <div class="menu-radio-group">
+        <label class="menu-radio-label">
+          <input type="radio" name="menuContent" value="bilingual">
+          <span>双语对照</span>
+        </label>
+        <label class="menu-radio-label">
+          <input type="radio" name="menuContent" value="mono">
+          <span>只留译文</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="menu-sub-row">
+      <span class="menu-sub-title">输出格式（可多选）：</span>
+      <div class="menu-chips-group">
+        <label class="menu-chip">
+          <input type="checkbox" id="fmtPdf" value="pdf">
+          <span>PDF</span>
+        </label>
+        <label class="menu-chip">
+          <input type="checkbox" id="fmtDocx" value="docx">
+          <span>Word</span>
+        </label>
+        <label class="menu-chip">
+          <input type="checkbox" id="fmtMd" value="md">
+          <span>MD</span>
+        </label>
+        <label class="menu-chip">
+          <input type="checkbox" id="fmtHtml" value="html">
+          <span>HTML</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="menu-sub-row inline library-row">
+      <span class="menu-sub-title">翻译文档库：</span>
+      <div class="menu-lib-btns">
+        <button id="menuOpenLib" class="menu-chip-btn" type="button">📂 打开</button>
+        <button id="menuPickLib" class="menu-chip-btn" type="button">📁 更改</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-footer">
+    <button id="menuHidePet" class="menu-text-btn" type="button">隐藏</button>
+    <button id="menuHelp" class="menu-text-btn" type="button">说明</button>
+    <button id="menuQuit" class="menu-text-btn danger" type="button">退出</button>
+  </div>
+</div>
+
+<script src="pet/state.js"></script>
+<script src="pet/anim.js"></script>
+<script src="pet/bubble.js"></script>
+<script src="pet/drag.js"></script>
+<script src="pet/menu-panel.js"></script>
+<script src="pet/task.js"></script>
+<script src="pet/drop.js"></script>
+<script src="pet/wizards.js"></script>
+<script src="pet/main.js"></script>
+</body>
+</html>
